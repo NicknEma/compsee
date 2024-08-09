@@ -1,6 +1,15 @@
 @echo off
 
-REM  -sanitize:address
-odin build src -debug -o:none -out:searches.exe -vet -warnings-as-errors -extra-linker-flags:/map:searches_crt.map
+set caller_location=%cd%
+set script_location=%~dp0
+cd %script_location%
+set custom_root=%cd%
+REM set custom_bin=%custom_root%\bin
+cd %caller_location%
 
-REM odin build src -o:speed -out:searches.exe -no-crt -disable-assert -vet -warnings-as-errors -extra-linker-flags:/map:searches_no_crt.map
+pushd %script_location%
+
+del *.pdb > NUL 2> NUL
+odin build . -debug -vet-shadowing -extra-linker-flags:"/opt:ref"
+
+popd
